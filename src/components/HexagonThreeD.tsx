@@ -68,24 +68,73 @@ export const HexagonThreeD = () => {
         // Add the hexagon group to the scene
         scene.add(hexagonGroup);
 
+        // Create a warm ambient light
+        const pointLight = new THREE.PointLight(0xffffff);
+        pointLight.position.set(5, 5, 5);
+        const ambientLight = new THREE.AmbientLight(0xffffff);
+        scene.add(pointLight, ambientLight);
+
+        // Helpers
+        // const lightHelper = new THREE.PointLightHelper(pointLight)
+        // const gridHelper = new THREE.GridHelper(200, 50);
+        // scene.add(lightHelper, gridHelper)
+
+        // Controls
         const controls = new OrbitControls(camera, renderer.domElement);
-        //controls.update() must be called after any manual changes to the camera's transform
         camera.position.set(0, 4, 8);
         controls.update();
+
+        const honeyDripGroup = new THREE.Group();
+        const honeyDripSpacing = 30;
+
+        function addHoneyDrip() {
+            // Create a group to hold the teardrops
+            const teardropGroup = new THREE.Group();
+
+            // Define parameters for the teardrop
+            const teardropRadius = 0.05; // Radius of the teardrop
+            const teardropHeight = 0.2;  // Height of the teardrop
+            const teardropRadialSegments = 8; // Segments for the circular base
+
+            // Create a spherical top
+            const sphereGeometry = new THREE.SphereGeometry(teardropRadius, teardropRadialSegments, 6);
+            const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xffaa00 });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+            // Create a conical bottom
+            const coneGeometry = new THREE.ConeGeometry(teardropRadius, teardropHeight, teardropRadialSegments);
+            const coneMaterial = new THREE.MeshStandardMaterial({ color: 0xffaa00 });
+            const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+
+            // Position the cone geometry so that it connects to the spherical top
+            cone.position.y = -teardropHeight / 2;
+
+            const material = new THREE.MeshStandardMaterial({ color: 0xffaa00 }); // Honey drip color
+            const drip = new THREE.Mesh(coneGeometry, material);
+
+            const [x, y, z] = Array(3).fill(0).map(() => THREE.MathUtils.randFloatSpread(honeyDripSpacing)); // Adjust the spread range as needed
+            drip.position.set(x, y, z);
+            honeyDripGroup.add(drip);
+        }
+
+        Array(500).fill(0).forEach(addHoneyDrip);
+        scene.add(honeyDripGroup);
+
+
         // Create an animation function
         const animate = () => {
             requestAnimationFrame(animate);
             controls.update();
             // Rotate shape
-            // hexagonGroup.rotation.z += 0.005;
-            
+            honeyDripGroup.rotation.x += 0.001;
+            honeyDripGroup.rotation.y += 0.002;
+            honeyDripGroup.rotation.z += 0.001;
+
             // Update the pulsation variables and apply the pulsation animation to each hexagon
             pulsationVariables.forEach((pulsationVar) => {
                 const { hexagon } = pulsationVar;
-
                 // Update the pulsation variable with a sine wave for pulsation effect
                 pulsationVar.pulsation = Math.sin(performance.now() * 0.002) * 0.1 + 1; // Adjust the frequency and amplitude as needed
-
                 // Apply pulsation scale to the individual hexagon
                 hexagon.scale.set(pulsationVar.pulsation, pulsationVar.pulsation, 1);
             });
@@ -110,5 +159,5 @@ export const HexagonThreeD = () => {
 
     }, []);
 
-    return <div id="canvas-container" />;
+    return <canvas id="bg"></canvas>;
 };
