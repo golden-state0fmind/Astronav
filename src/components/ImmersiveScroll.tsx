@@ -6,7 +6,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 export const ImmersiveScroll = () => {
     useEffect(() => {
         // Setup
-
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -79,15 +78,10 @@ export const ImmersiveScroll = () => {
         }
         // Add the hexagon group to the scene
         scene.add(hexagonGroup);
-        
-        // const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-        // const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
-        // const torus = new THREE.Mesh(geometry, material);
 
         //scene.add(hexagon);
 
         // Lights
-
         const pointLight = new THREE.PointLight(0xffffff);
         pointLight.position.set(5, 5, 5);
 
@@ -95,7 +89,6 @@ export const ImmersiveScroll = () => {
         scene.add(pointLight, ambientLight);
 
         // Helpers
-
         // const lightHelper = new THREE.PointLightHelper(pointLight)
         // const gridHelper = new THREE.GridHelper(200, 50);
         // scene.add(lightHelper, gridHelper)
@@ -108,12 +101,65 @@ export const ImmersiveScroll = () => {
             const material = new THREE.MeshStandardMaterial({ color: 0xFFD700 });
             const hexagon = new THREE.Mesh(geometry, material);
 
+            // Define the hexagon's shape (vertices)
+            const hexagonShape = new THREE.Shape();
+            hexagonShape.moveTo(1, 0);
+            for (let i = 1; i <= 6; i++) {
+                const angle = (Math.PI / 3) * i;
+                hexagonShape.lineTo(Math.cos(angle), Math.sin(angle));
+            }
+
+            // Define the settings for extrusion
+            const extrudeSettings = {
+                amount: 1, // Extrusion depth (adjust as needed)
+                bevelEnabled: false, // Disable bevel for a flat extrusion
+            };
+            // Create a geometry for the extruded hexagon
+            const hexagonGeometry = new THREE.ExtrudeGeometry(hexagonShape, extrudeSettings);
+            // Create a fog tint material for the sides
+            const fogTintMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700, fog: true }); // Adjust the fog color as needed
+
+            // Create a material array with transparent materials for the front and back and the fog tint material for the sides
+            const materials = [
+                new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.2, side: THREE.FrontSide }), // Transparent front side
+                new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.3, side: THREE.BackSide }), // Transparent back side
+                fogTintMaterial,
+            ];
+
+            // Create a group to hold the extruded hexagons
+            const hexagonGroup = new THREE.Group();
+
+            // Define the number of hexagons and their arrangement
+            const numRows = 4; // Number of rows of hexagons
+            const numCols = 4; // Number of hexagons in each row
+            const hexagonSpacing = 1.2; // Spacing between hexagons
+            const pulsationVariables: { hexagon: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshBasicMaterial[], THREE.Object3DEventMap>; pulsation: number; }[] = [];
+
+            for (let row = 0; row < numRows; row++) {
+                for (let col = 0; col < numCols; col++) {
+                    const hexagon = new THREE.Mesh(hexagonGeometry, materials);
+                    hexagon.position.x = col * (hexagonSpacing * 1.5);
+                    hexagon.position.y = row * (hexagonSpacing * 1.73);
+                    if (col % 2 !== 0) {
+                        hexagon.position.y += hexagonSpacing * 0.865;
+                    }
+                    hexagonGroup.add(hexagon);
+                    // Create a pulsation variable for each hexagon and initialize it
+                    pulsationVariables.push({
+                        hexagon,
+                        pulsation: 0,
+                    });
+                }
+            }
+            // Add the hexagon group to the scene
+            //scene.add(hexagonGroup);
+
             const [x, y, z] = Array(3)
                 .fill(0)
                 .map(() => THREE.MathUtils.randFloatSpread(100));
 
-            hexagon.position.set(x, y, z);
-            scene.add(hexagon);
+            hexagonGroup.position.set(x, y, z);
+            scene.add(hexagonGroup);
         }
 
         Array(200).fill(0).forEach(addHexagon);
