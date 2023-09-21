@@ -15,7 +15,7 @@ export const SpaceLake = () => {
 
         // Load your static image as a texture
         const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('/images/Space_Lake.png');
+        const texture = textureLoader.load('/images/Space_Background.png');
         const material = new THREE.MeshBasicMaterial({ map: texture });
 
         const plane = new THREE.Mesh(geometry, material);
