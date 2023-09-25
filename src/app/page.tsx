@@ -1,7 +1,26 @@
+"use client";
+import { useEffect, useState } from 'react';
 import '../styles/styles.css';
 import { ImmersiveScroll } from "@/components/ImmersiveScroll";
 
 export default function Home() {
+  const [planets, setPlanets] = useState([])
+
+  const fetchSpaceFacts = async () => {
+    try {
+      const fetchData = await fetch(`https://api.le-systeme-solaire.net/rest/bodies/`)
+      const data = await fetchData.json()
+      setPlanets(data)
+    } catch(error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  
+  useEffect(() => {
+    fetchSpaceFacts()
+  }, [])
+  
   return (
     <>
       <ImmersiveScroll />
