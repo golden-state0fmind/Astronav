@@ -3,14 +3,27 @@ import { useEffect, useState } from 'react';
 import '../styles/styles.css';
 import { ImmersiveScroll } from "@/components/ImmersiveScroll";
 
+interface astroBodies {
+  englishName: string;
+  isPlanet: boolean;
+  moons: Array<object>;
+  discoveryDate: string;
+  discoveredBy: string;
+}
+
 export default function Home() {
-  const [planets, setPlanets] = useState([])
+  const [bodies, setBodies] = useState<astroBodies[]>([]);
+  const [planets, setPlanets] = useState([]);
 
   const fetchSpaceFacts = async () => {
     try {
       const fetchData = await fetch(`https://api.le-systeme-solaire.net/rest/bodies/`)
       const data = await fetchData.json()
-      setPlanets(data)
+      for (const key of Object.keys(data)) {
+        if (Object.hasOwnProperty.call(data, key)) {
+          setBodies(data[key]);
+        }
+      }
     } catch(error) {
       console.error(error);
       throw error;
@@ -20,7 +33,24 @@ export default function Home() {
   useEffect(() => {
     fetchSpaceFacts()
   }, [])
-  
+
+  useEffect(() => {
+    const filteredBodies= [];
+    for (const astroBody of bodies) {
+      if (astroBody.isPlanet) {
+        filteredBodies.push(astroBody)
+        // TODO: add all the objects to an array 
+        // filter the new array of object onto the page
+        console.log(astroBody);
+      }
+    }
+    
+  }, [bodies])
+
+  useEffect(() => {
+    console.log(planets)
+  },[planets])
+
   return (
     <>
       <ImmersiveScroll />
