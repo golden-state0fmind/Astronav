@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import '../styles/styles.css';
 import { ImmersiveScroll } from "@/components/ImmersiveScroll";
+import { Sections } from '@/components/Sections';
 
 interface astroBodies {
   englishName: string;
@@ -13,7 +14,7 @@ interface astroBodies {
 
 export default function Home() {
   const [bodies, setBodies] = useState<astroBodies[]>([]);
-  const [planets, setPlanets] = useState([]);
+  const [planets, setPlanets] = useState<astroBodies[]>([]);
 
   const fetchSpaceFacts = async () => {
     try {
@@ -39,91 +40,29 @@ export default function Home() {
     for (const astroBody of bodies) {
       if (astroBody.isPlanet) {
         filteredBodies.push(astroBody)
-        // TODO: add all the objects to an array 
-        // filter the new array of object onto the page
-        console.log(astroBody);
       }
     }
-    
+    setPlanets(filteredBodies)
   }, [bodies])
-
-  useEffect(() => {
-    console.log(planets)
-  },[planets])
 
   return (
     <>
       <ImmersiveScroll />
       <main>
+
         <header>
-          <h1>🚀 Space Facts 🚀</h1>
+          <h1>Prepare for an exhilarating voyage through the cosmos as we uncover the enigmatic secrets of our neighboring planets! From the fiery inferno of Venus to the icy tundras of Neptune, these celestial wonders await your discovery. Join us on a cosmic adventure that will leave you awestruck by the sheer grandeur of our solar system. Get ready to embark on a thrilling journey to the stars and beyond!</h1>
         </header>
 
-        <blockquote>
-          <p>🚀 🚀 🚀 🚀 🚀 🚀</p>
-        </blockquote>
-
-        <section>
-          <h2>🚀 Space Facts will go here 🚀</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-        </section>
-
-        <section className="light">
-          <h2>🚀 Space Stuff 🚀</h2>
-
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-          <h2>🚀 More Space Facts 🚀</h2>
-
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-        </section>
+        {planets.map((planet, index) => (
+          <Sections key={index} englishName={planet.englishName} discoveryDate={planet.discoveryDate} discoveredBy={planet.discoveredBy} />
+        ))}
 
         <blockquote>
-          <p>Success is not final, failure is not fatal: It is the courage to continue that counts.<br />- Winston Churchillx</p>
+          <p>Thank you for joining us on this cosmic exploration of our planets! Your curiosity and eagerness to learn about the wonders of our solar system mean the world to us. We hope you've enjoyed this journey through the realms of space and that you continue to seek knowledge about the universe. Stay tuned for more fascinating facts and astronomical adventures. Together, we'll keep reaching for the stars!</p>
         </blockquote>
-
-        <section className="left">
-          <h2>🚀</h2>
-
-          <h3>🚀</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <h3>🚀</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <h3>🚀</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-        </section>
-
-        <blockquote>
-          <p>🚀 🚀 🚀 🚀 🚀</p>
-        </blockquote>
-
 
       </main>
-
-
     </>
   )
 }
