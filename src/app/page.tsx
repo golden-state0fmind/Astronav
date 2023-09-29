@@ -58,7 +58,7 @@ export default function Home() {
           <Sections key={index} englishName={planet.englishName} discoveryDate={planet.discoveryDate} discoveredBy={planet.discoveredBy} />
         ))}
 
-        <blockquote>
+        <blockquote className="left">
           <p>Thank you for joining us on this cosmic exploration of our planets! Your curiosity and eagerness to learn about the wonders of our solar system mean the world to us. We hope you've enjoyed this journey through the realms of space and that you continue to seek knowledge about the universe. Stay tuned for more fascinating facts and astronomical adventures. Together, we'll keep reaching for the stars!</p>
         </blockquote>
 
